@@ -19,7 +19,7 @@ def select_manga():
         manga_table.add_row([str(idx + 1), manga.getText()])
     print(manga_table)
 
-    # User selects manga
+    # User select manga
     while True:
         chosen_manga_idx = int(input("\nSelect the manga you want to download.\nPlease input the index on the left.\n")) - 1
         if chosen_manga_idx >= 0 and chosen_manga_idx < len(manga_list):
@@ -123,7 +123,7 @@ def download_manga(chosen_manga):
                 print()
                 break
 
-            # Go to next page
+            # Get next page
             res = requests.get(next_page_url)
             res.raise_for_status()
 
