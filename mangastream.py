@@ -6,11 +6,11 @@ import requests
 def select_manga():
     # Get manga list page
     manga_list_url = "http://mangastream.com/manga"
-    res = requests.get(manga_list_url)
-    res.raise_for_status()
+    manga_list_res = requests.get(manga_list_url)
+    manga_list_res.raise_for_status()
     
     # Convert to soup for parsing
-    manga_list_soup = bs4.BeautifulSoup(res.text, "html.parser")
+    manga_list_soup = bs4.BeautifulSoup(manga_list_res.text, "html.parser")
 
     # Get list of manga and print them
     manga_list = manga_list_soup.select("td a")[::2]
@@ -37,11 +37,11 @@ def select_manga():
 def download_manga(chosen_manga):
     # Get chapter list page
     chapter_list_url = chosen_manga.get("href")
-    res = requests.get(chapter_list_url)
-    res.raise_for_status()
+    chapter_list_res = requests.get(chapter_list_url)
+    chapter_list_res.raise_for_status()
     
     # Convert to soup for parsing
-    chapter_list_soup = bs4.BeautifulSoup(res.text, "html.parser")
+    chapter_list_soup = bs4.BeautifulSoup(chapter_list_res.text, "html.parser")
 
     # Get list of chapters and print them
     chapter_list = chapter_list_soup.select("td a")
@@ -80,11 +80,11 @@ def download_manga(chosen_manga):
         
         # Get chapter's first page
         chapter_url = chapter.get("href")
-        res = requests.get(chapter_url)
-        res.raise_for_status()
+        page_res = requests.get(chapter_url)
+        page_res.raise_for_status()
     
         # Convert to soup for parsing
-        page_soup = bs4.BeautifulSoup(res.text, "html.parser")
+        page_soup = bs4.BeautifulSoup(page_res.text, "html.parser")
 
         # Initialize page number
         page_number = 1
@@ -95,8 +95,8 @@ def download_manga(chosen_manga):
 
             # Get source image page
             img_url = "http:" + page_soup.select("#manga-page")[0].get("src")
-            res = requests.get(img_url)
-            res.raise_for_status()
+            img_res = requests.get(img_url)
+            img_res.raise_for_status()
 
             # Stringify page number
             if page_number < 10:
@@ -110,10 +110,10 @@ def download_manga(chosen_manga):
             img_extension = img_url.rsplit(".", 1)[1]
 
             # Download image
-            imageFile = open(os.path.join(chosen_manga.getText(), chapter.getText(), page_number_string + "." + img_extension), 'wb')
-            for chunk in res.iter_content(100000):
-                imageFile.write(chunk)
-            imageFile.close()
+            img_file = open(os.path.join(chosen_manga.getText(), chapter.getText(), page_number_string + "." + img_extension), 'wb')
+            for chunk in img_res.iter_content(100000):
+                img_file.write(chunk)
+            img_file.close()
 
             # Get next page url
             next_page_url = page_soup.select(".next a")[0].get("href")
@@ -124,11 +124,11 @@ def download_manga(chosen_manga):
                 break
 
             # Get next page
-            res = requests.get(next_page_url)
-            res.raise_for_status()
+            page_res = requests.get(next_page_url)
+            page_res.raise_for_status()
 
             # Convert to soup for parsing
-            page_soup = bs4.BeautifulSoup(res.text, "html.parser")
+            page_soup = bs4.BeautifulSoup(page_res.text, "html.parser")
 
             # Increment page number
             page_number += 1
