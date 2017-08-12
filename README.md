@@ -8,4 +8,7 @@ A Python script to download manga from MangaStream.
 * PrettyTable
 
 ## Usage
-`$ python mangastream.py`
+```
+$ pip install -r requirements.txt
+$ python mangastream.py
+```
