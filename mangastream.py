@@ -34,7 +34,7 @@ def select_manga():
 
     return chosen_manga
 
-def download_manga(chosen_manga):
+def select_chapters(chosen_manga):
     # Get chapter list page
     chapter_list_url = chosen_manga.get("href")
     chapter_list_res = requests.get(chapter_list_url)
@@ -70,8 +70,10 @@ def download_manga(chosen_manga):
             print("Out of range. Index must be between " + str(start_chapter + 1) + " and " + str(len(chapter_list)) + ".")
     print()
 
+    return chapter_list[start_chapter:end_chapter+1]
+
+def download_images(chosen_manga, chosen_chapters):
     # Go through each chapter
-    chosen_chapters = chapter_list[start_chapter:end_chapter+1]
     for chapter in chosen_chapters:
         print("Downloading " + chapter.getText() + " ", end="", flush=True)
 
@@ -135,7 +137,8 @@ def download_manga(chosen_manga):
 
 def main():
     manga = select_manga()
-    download_manga(manga)
+    chapters = select_chapters(manga)
+    download_images(manga, chapters)
 
 if __name__ == "__main__":
     main()
