@@ -17,7 +17,7 @@ def int_input(prompt, lower, upper):
         if user_input >= lower and user_input <= upper:
             break
         else:
-            print("Out of range. Index must be between "+ str(lower) + "and " + str(upper) + ".")
+            print("Out of range. Index must be between "+ str(lower) + " and " + str(upper) + ".")
     return user_input - 1 # zero-based indexing
 
 def write_image(url, filename):
@@ -66,7 +66,7 @@ class Downloader:
         # User select starting and ending chapters
         print("\nSelect the chapters you want to download.\nPlease input the index on the left.")
         start_chapter = int_input("\nSelect the starting chapter.\n", 1, len(chapter_list))
-        end_chapter = int_input("\nSelect the ending chapter.\n", start_chapter, len(chapter_list))
+        end_chapter = int_input("\nSelect the ending chapter.\n", start_chapter + 1, len(chapter_list))
         print()
 
         self.chosen_chapters = chapter_list[start_chapter:end_chapter+1]
