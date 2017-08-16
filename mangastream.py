@@ -20,6 +20,12 @@ def int_input(prompt, lower, upper):
             print("Out of range. Index must be between "+ str(lower) + " and " + str(upper) + ".")
     return user_input - 1 # zero-based indexing
 
+def clean(string):
+    reserved_characters = "\/:*?\"<>|"
+    for reserved in reserved_characters:
+        string = string.replace(reserved, " ")
+    return string
+
 def write_image(url, filename):
     response = requests.get(url)
     response.raise_for_status()
@@ -51,7 +57,8 @@ class Downloader:
         print("\nYou have chosen " + self.chosen_manga.getText() + ".")
         
         # Create manga folder
-        os.makedirs(self.chosen_manga.getText(), exist_ok=True)
+        manga_dir = clean(self.chosen_manga.getText())
+        os.makedirs(manga_dir, exist_ok=True)
 
     def select_chapters(self):
         # Parse chapter list page
@@ -77,8 +84,9 @@ class Downloader:
             print("Downloading " + chapter.getText() + " ", end="", flush=True)
 
             # Create chapter folder
-            os.makedirs(os.path.join(self.chosen_manga.getText(), chapter.getText()), exist_ok=True)
-            
+            chapter_dir = os.path.join(clean(self.chosen_manga.getText()), clean(chapter.getText()))
+            os.makedirs(chapter_dir, exist_ok=True)
+
             # Parse chapter's first page
             page_url = chapter.get("href")
             page_html = to_html(page_url)
@@ -100,7 +108,7 @@ class Downloader:
                 # Filename
                 page_number_string = str(page_number).zfill(3)
                 img_extension = img_url.rsplit(".", 1)[1]
-                filename = os.path.join(self.chosen_manga.getText(), chapter.getText(), page_number_string + "." + img_extension)
+                filename = os.path.join(clean(self.chosen_manga.getText()), clean(chapter.getText()), page_number_string + "." + img_extension)
 
                 # Download image
                 write_image(img_url, filename)
